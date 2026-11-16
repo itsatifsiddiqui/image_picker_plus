@@ -75,7 +75,7 @@ void main() {
     expect(find.text("You can select up to 2 items"), findsOneWidget);
   });
 
-  testWidgets("select counts from the shown item and cancel keeps only the shown one", (tester) async {
+  testWidgets("select starts empty, a tap counts from 1 and cancel keeps only the shown one", (tester) async {
     Object? result;
     await pumpPicker(
       tester,
@@ -85,6 +85,16 @@ void main() {
       onResult: (r) => result = r,
     );
     await tester.tap(find.text("Select"));
+    await tester.pumpAndSettle();
+    expect(find.text("1"), findsNothing);
+    expect(
+      tester
+          .widget<TextButton>(find.ancestor(of: find.text("Next"), matching: find.byType(TextButton)))
+          .onPressed,
+      isNull,
+    );
+
+    await tester.tap(cell("0"));
     await tester.pumpAndSettle();
     expect(find.descendant(of: cell("0"), matching: find.text("1")), findsOneWidget);
     await tester.tap(cell("4"));
@@ -113,6 +123,8 @@ void main() {
         onResult: onResult,
       );
       await tester.tap(find.text("Select"));
+      await tester.pump();
+      await tester.tap(cell("0"));
       await tester.pump();
       await tester.tap(cell("4"));
       await tester.pump();
@@ -419,6 +431,7 @@ void main() {
     );
     await tester.tap(find.text("Select"));
     await tester.pump();
+    await tester.tap(cell("0"));
     await tester.tap(cell("5"));
     await tester.tap(cell("2"));
     await tester.pump();

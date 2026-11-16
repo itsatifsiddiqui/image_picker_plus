@@ -56,6 +56,8 @@ void main() {
     );
     await tester.tap(find.text("Select"));
     await tester.pump();
+    await tester.tap(find.byKey(const ValueKey("0")));
+    await tester.pump();
     await tester.tap(find.byKey(const ValueKey("3")));
     await tester.pump();
     await tester.tap(find.text("Photo"));
